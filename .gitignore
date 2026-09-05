@@ -3,7 +3,6 @@ __pycache__/
 *.pyc
 *.pyo
 *.egg-info/
-dist/
 build/
 
 # Model weights (too large for GitHub)
