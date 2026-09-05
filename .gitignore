@@ -1,31 +1,3 @@
-# Python
-__pycache__/
-*.pyc
-*.pyo
-*.egg-info/
-build/
-
-# Model weights (too large for GitHub)
-models/*.pth
-models/*.onnx
-
-# Binary engine files
-engine/*.exe
-engine/*.dll
-
-# Backups
-.bak/
-
-# Workspace / IDE
-.workbuddy/
-.vscode/
-.idea/
-
-# Test outputs
-output/
-Picture/
-yupianxiangsu/
-
 # System
 Thumbs.db
 .DS_Store

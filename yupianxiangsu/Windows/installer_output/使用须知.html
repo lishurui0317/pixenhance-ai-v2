@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>御·像素 Yupianxiangsu — 使用须知</title>
+<style>
+  :root {
+    --ink: #09090B;
+    --muted: #71717A;
+    --line: #E2E8F0;
+    --accent: #18181B;
+    --warn-bg: #FEF3C7;
+    --warn-fg: #92400E;
+    --err-bg: #FEE2E2;
+    --err-fg: #991B1B;
+    --ok-bg: #DCFCE7;
+    --ok-fg: #166534;
+    --code-bg: #F4F4F5;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Segoe UI", "Microsoft YaHei", -apple-system, sans-serif;
+    color: var(--ink);
+    background: #FAFAFA;
+    line-height: 1.75;
+    font-size: 15px;
+  }
+  .page { max-width: 860px; margin: 0 auto; padding: 48px 32px 80px; }
+  header { border-bottom: 2px solid var(--ink); padding-bottom: 20px; margin-bottom: 36px; }
+  header h1 { font-size: 26px; letter-spacing: 0.5px; }
+  header .sub { color: var(--muted); margin-top: 6px; font-size: 13px; }
+  h2 {
+    font-size: 19px; margin: 44px 0 16px;
+    padding-left: 12px; border-left: 4px solid var(--accent);
+  }
+  h3 { font-size: 15.5px; margin: 24px 0 10px; }
+  p { margin: 8px 0; }
+  ul, ol { padding-left: 24px; margin: 8px 0; }
+  li { margin: 5px 0; }
+  code {
+    font-family: Consolas, "Courier New", monospace;
+    background: var(--code-bg); padding: 2px 6px; border-radius: 4px;
+    font-size: 13px; word-break: break-all;
+  }
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; background: #fff; font-size: 14px; }
+  th, td { border: 1px solid var(--line); padding: 10px 12px; text-align: left; vertical-align: top; }
+  th { background: #F8FAFC; font-weight: 600; white-space: nowrap; }
+  .tag { display: inline-block; font-size: 12px; font-weight: 600; padding: 1px 8px; border-radius: 999px; white-space: nowrap; }
+  .tag-ok   { background: var(--ok-bg);   color: var(--ok-fg); }
+  .tag-warn { background: var(--warn-bg); color: var(--warn-fg); }
+  .tag-err  { background: var(--err-bg);  color: var(--err-fg); }
+  .note {
+    border: 1px solid var(--line); background: #fff; border-radius: 8px;
+    padding: 14px 18px; margin: 14px 0; font-size: 14px;
+  }
+  .note-warn { border-color: #FBBF24; background: var(--warn-bg); color: var(--warn-fg); }
+  .note-err  { border-color: #FCA5A5; background: var(--err-bg);  color: var(--err-fg); }
+  .note-ok   { border-color: #86EFAC; background: var(--ok-bg);   color: var(--ok-fg); }
+  footer { margin-top: 60px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12.5px; }
+  .err-code { font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<header>
+  <h1>御·像素 Yupianxiangsu — 使用须知</h1>
+  <div class="sub">v1.0.0 · AI 图像超分工具 · 本文档所有性能与故障结论均来自真机实测（测试卡：NVIDIA GeForce RTX 2060 / 6GB 显存 / Windows x64），未实测的配置已明确标注，绝不瞎编。</div>
+</header>
+
+<!-- ================================================================ -->
+<h2>一、快速上手</h2>
+<ol>
+  <li>双击桌面图标 <b>Yupianxiangsu</b> 启动（安装程序已自动创建桌面与开始菜单快捷方式）。</li>
+  <li>把图片<strong>拖进窗口</strong>（或点击选择文件）。<strong>一次只处理一张图</strong>——这是刻意设计：单图模式能把显存峰值压到最低，多图并发只会把你的显卡送走。</li>
+  <li>选择目标档位：
+    <table>
+      <tr><th>档位</th><th>输出长边</th><th>适合场景</th></tr>
+      <tr><td>FHD</td><td>1920 px</td><td>网页、聊天发送</td></tr>
+      <tr><td>2K</td><td>2560 px</td><td>普通显示器壁纸</td></tr>
+      <tr><td>4K</td><td>3840 px</td><td>4K 屏幕、打印（小图会自动跑两遍 AI 放大，耗时最久）</td></tr>
+    </table>
+    <p>按<strong>长边</strong>归一：横图竖图都适用，短边按原比例自动计算。</p>
+  </li>
+  <li>点击「开始放大」，等待完成提示即可。输出图会自动打开所在文件夹。</li>
+  <li>上次打开的文件夹、档位、模型选择都会被记住，下次启动原样恢复（配置保存在 <code>%LOCALAPPDATA%\Yupianxiangsu\config.json</code>，卸载时可一并清理）。</li>
+</ol>
+
+<!-- ================================================================ -->
+<h2>二、什么配置不能用 / 能用到什么程度</h2>
+
+<h3>实测结论表（RTX 2060 / 6GB 真机数据）</h3>
+<table>
+  <tr><th>场景</th><th>实测结果</th><th>状态</th></tr>
+  <tr>
+    <td>RTX 2060（6GB 显存）<br>tile=128 + 单图模式</td>
+    <td>正常 GPU 加速。小图 4x 放大约 3.4 秒；4K 级联（两遍 AI 放大）显存峰值约 <b>1.79 GB</b></td>
+    <td><span class="tag tag-ok">完全可用</span></td>
+  </tr>
+  <tr>
+    <td>同一张卡，关闭显存保护<br>（大 tile / 多图并发）</td>
+    <td>显存飙到 <b>5.9 / 6.0 GB</b>，贴着上限裸奔——本应用已默认锁死 tile=128 + 单图，<b>请勿</b>手动改配置文件里的相关参数</td>
+    <td><span class="tag tag-warn">默认已规避</span></td>
+  </tr>
+  <tr>
+    <td>无 Vulkan 显卡 / 显卡驱动异常</td>
+    <td>引擎报 <code>invalid gpu device</code> 后应用<strong>自动降级</strong>：输出仍能生成，但走的是普通插值放大 + 锐化，<b>没有 AI 细节增强</b>。日志里会写明实际使用的引擎</td>
+    <td><span class="tag tag-warn">能用，无 AI</span></td>
+  </tr>
+  <tr>
+    <td>远程桌面 / 虚拟机里的 GPU 会话</td>
+    <td>远程会话通常拿不到 Vulkan 设备，行为同上（降级保底出图）</td>
+    <td><span class="tag tag-warn">能用，无 AI</span></td>
+  </tr>
+  <tr>
+    <td>纯 CPU（完全无显卡）</td>
+    <td>实测本版本引擎的 CPU 模式（<code>-g -1</code>）直接报 <code>invalid gpu device</code>，<b>不可用</b>；ONNX CPU 保底需要预先转换模型（见第四节第 5 条），当前安装包未内置 → 实际效果同上：普通放大保底</td>
+    <td><span class="tag tag-warn">能用，无 AI</span></td>
+  </tr>
+  <tr>
+    <td>显存 2GB 以下的老显卡</td>
+    <td><b>未实测，不承诺。</b>tile=128 实测峰值约 1.8GB，理论上勉强够，但出了问题别怪文档没提醒</td>
+    <td><span class="tag tag-warn">未实测</span></td>
+  </tr>
+</table>
+
+<h3>关于图片本身的限制（设计行为，不是故障）</h3>
+<ul>
+  <li><b>原图长边 &gt; 1700 px</b>：再跑 4x 放大收益极低、显存开销极大，应用会<strong>自动跳过 AI 直接走插值 + 锐化</strong>。想要 AI 效果请喂小图（几百像素的老照片是最佳素材）。</li>
+  <li><b>原图超过 100 万像素</b>（约 1200×830 以上）：自动切换切片模式，逐块处理后无缝拼接，耗时相应变长，属正常现象。</li>
+  <li>支持 JPG / PNG / BMP / WebP 等常见格式；输出统一为 PNG（无损）。</li>
+</ul>
+
+<!-- ================================================================ -->
+<h2>三、报错速查表（真实报错原文 → 解决方法）</h2>
+<table>
+  <tr><th>报错原文（日志/弹窗出现）</th><th>原因</th><th>解决方法</th></tr>
+  <tr>
+    <td><code class="err-code">_wfopen ...models/realesrgan-x4plus.param failed</code></td>
+    <td>Vulkan 模型文件（.param / .bin）缺失——<b>最常见的坑</b>，通常是杀毒软件误删或手动动过 <code>engine\models\</code> 目录</td>
+    <td>应用启动时会自动体检并弹窗给出缺失路径。从 <code>github.com/xinntao/Real-ESRGAN/releases</code> 下载 <code>realesrgan-ncnn-vulkan-20220424-windows.zip</code>，把 models 文件夹里的 <b>.param 和 .bin 成对</b>复制回弹窗给出的目录，重启应用。被杀软删了就把安装目录加白名单</td>
+  </tr>
+  <tr>
+    <td><code class="err-code">invalid gpu device</code></td>
+    <td>没有可用的 Vulkan 设备：没装/没更新显卡驱动、远程桌面会话、驱动异常</td>
+    <td>本机登录并更新显卡驱动后重试；远程桌面里属于预期行为（自动降级保底出图，无 AI 增强）</td>
+  </tr>
+  <tr>
+    <td><code class="err-code">处理超时（超过 30 分钟）</code></td>
+    <td>单张图跑了 30 分钟还没完：图太大 + 档位太高 + 机器太慢三者叠加</td>
+    <td>换低一档（4K → 2K），或先裁剪再放大。别跟它硬耗</td>
+  </tr>
+  <tr>
+    <td><code class="err-code">找不到 realesrgan-ncnn-vulkan 可执行文件</code></td>
+    <td>安装目录下 <code>engine\realesrgan-ncnn-vulkan.exe</code> 被删或被杀软隔离</td>
+    <td>杀软加白名单后重装/修复安装；应用内也可手动指定引擎位置</td>
+  </tr>
+  <tr>
+    <td><code class="err-code">MSVCP140.dll 缺失</code> / 引擎启动即崩</td>
+    <td>缺少 Visual C++ 运行库</td>
+    <td>安装「Microsoft Visual C++ 2015-2022 Redistributable (x64)」，微软官网免费下载</td>
+  </tr>
+  <tr>
+    <td>启动日志出现 <code class="err-code">未在 models/ 找到 ONNX 模型</code></td>
+    <td>警告级别，不影响当前使用——只影响"无显卡时的 AI 保底"能力</td>
+    <td>想启用 CPU AI 保底见第四节第 5 条；不在乎就无视</td>
+  </tr>
+  <tr>
+    <td><code class="err-code">命令执行成功但未生成超分图片</code></td>
+    <td>输出目录不可写（网络盘权限、路径被占用等）</td>
+    <td>把输出目录换成本地磁盘目录再试</td>
+  </tr>
+</table>
+
+<!-- ================================================================ -->
+<h2>四、进阶说明</h2>
+
+<h3>1. 引擎自动降级链（实际行为）</h3>
+<p><b>Vulkan GPU</b>（AI 增强）→ 失败时 → <b>普通插值 + USM 锐化 + CLAHE</b>（保底出图）。日志区会用文字注明每张图实际走了哪条路——觉得输出不对劲先看日志，别急着怀疑人生。</p>
+
+<h3>2. 显存保护（已内置，无需设置）</h3>
+<ul>
+  <li>tile 尺寸锁定 128（实测 400 会吃光 6GB 显存）</li>
+  <li>GPU 任务并发锁定 1（多张图叠加跑 = 显存翻倍暴毙）</li>
+  <li>单次处理锁定 1 张图，选多张自动只保留一张</li>
+</ul>
+
+<h3>3. 4K 档位为什么慢</h3>
+<p>小图（比如 247×300）到 4K 需要约 16 倍面积提升，应用会连续跑<b>两遍</b> AI 放大再精修到 3840px——这是"清晰 4K"和"糊成一团的 4K"的区别。慢是 feature，不是 bug。</p>
+
+<h3>4. 配置记忆与卸载清理</h3>
+<p>用户配置存于 <code>%LOCALAPPDATA%\Yupianxiangsu\config.json</code>（安装到 Program Files 后应用目录不可写，这是唯一正确位置）。卸载程序会自动清理该目录。</p>
+
+<h3>5. 想要"无显卡也有 AI 增强"？（可选，需要技术动手）</h3>
+<p>当前安装包未内置 ONNX 模型（仅有 PyTorch 权重）。若需在无 Vulkan 的机器上启用 CPU AI 保底：在有 Python 环境的机器上进入安装目录运行：</p>
+<p><code>pip install torch onnx basicsr</code> → <code>python convert_pth_to_onnx.py</code></p>
+<p>生成 <code>models\realesrgan-x4plus.onnx</code> 后即可自动生效。注意：CPU 跑 Real-ESRGAN <b>非常慢</b>（小图数分钟起步），纯属"聊胜于无"方案。</p>
+
+<!-- ================================================================ -->
+<h2>五、常见疑问</h2>
+<ul>
+  <li><b>放大后还是有点糊？</b> AI 无法凭空捏造不存在的细节，源图信息量决定上限。另外应用刻意避免了"过度锐化出的塑料感"，偏好真实质感。</li>
+  <li><b>能一次放大一整个文件夹吗？</b> 不能，故意的。串行单图是显存安全的唯一解。</li>
+  <li><b>处理中能退出吗？</b> 会弹确认框。强制退出不会损坏源图，但当前这张白跑了。</li>
+  <li><b>支持什么系统？</b> Windows x64（Win10 21H2 及以上推荐，Win11 完美）。32 位系统免谈。</li>
+</ul>
+
+<footer>
+  御·像素 Yupianxiangsu v1.0.0 · 本文档与安装包同目录发布 · 性能与故障数据实测于 RTX 2060 / 6GB / Windows x64
+</footer>
+
+</div>
+</body>
+</html>
